@@ -1,0 +1,43 @@
+body {
+    background: #121721;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+.row {
+    border: 1px solid #3a3f52;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.row-header {
+    display: block;
+    background: #1e2433;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+.row input {
+    display: none;
+}
+.row-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.row input:checked ~ .row-content {
+    max-height: 500px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+}
+th, td {
+    padding: 8px;
+    border-bottom: 1px solid #444;
+}
