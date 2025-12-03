@@ -9,18 +9,11 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-# ----------------------------------------
-# Paths to data files
-# ----------------------------------------
 BASE_DIR = Path(__file__).parent.parent  # project folder
 DATA_DIR = BASE_DIR / "data"
 LOG_PATH = DATA_DIR / "final_logs.txt"         # change if your file name is different
 LAYOUT_PATH = DATA_DIR / "layout.json"
 
-
-# ----------------------------------------
-# Log parsing and movement history
-# ----------------------------------------
 
 def parse_real_log_line(line: str):
     """
@@ -140,13 +133,7 @@ def group_events_by_pallet(events):
 
 
 def compute_travel_times(events_by_pallet):
-    """
-    For each pallet, look at consecutive ARRIVAL events and treat
-    the time between them as the travel time for the edge of the
-    current event: from -> to.
-    Then average those times for each edge.
-    Returns a dict: { "FROM->TO": avg_seconds }
-    """
+    
     durations_by_edge = defaultdict(list)
 
     for pid, p_events in events_by_pallet.items():
@@ -172,17 +159,7 @@ def compute_travel_times(events_by_pallet):
     return travel_times
 
 
-# ----------------------------------------
-# Simulation of live movement
-# ----------------------------------------
-
 class Simulation:
-    """
-    Simple simulation that replays ARRIVAL movements over time.
-    For each ARRIVAL with from/to, we treat it as a move starting at event time
-    and lasting travel_times[from->to] seconds (or a default).
-    """
-
     def __init__(self, events, travel_times, default_travel_seconds=5):
         self.events = events
         self.travel_times = travel_times
@@ -198,10 +175,6 @@ class Simulation:
         self.pallet_state = {}
 
     def advance_time(self, delta_seconds):
-        """
-        Move simulated time forward and apply any events that
-        should have happened by now.
-        """
         self.sim_time += timedelta(seconds=delta_seconds)
 
         while self.sim_index < len(self.events) and \
@@ -228,9 +201,6 @@ class Simulation:
             self.sim_index += 1
 
     def step(self, delta_seconds=2):
-        """
-        Move time forward and return a snapshot of the current state.
-        """
         self.advance_time(delta_seconds)
 
         snapshot = {
@@ -244,12 +214,6 @@ class Simulation:
             snapshot["pallets"].append(pallet_info)
 
         return snapshot
-
-
-# ----------------------------------------
-# Load layout + events at startup
-# ----------------------------------------
-
 try:
     layout = json.loads(LAYOUT_PATH.read_text(encoding="utf-8"))
 except FileNotFoundError:
@@ -261,20 +225,10 @@ travel_times = compute_travel_times(events_by_pallet)
 
 sim = Simulation(events, travel_times, default_travel_seconds=5)
 
-
-# ----------------------------------------
-# Helper for datetime → string
-# ----------------------------------------
-
 def serialize_time(dt: datetime | None):
     if dt is None:
         return None
     return dt.isoformat()
-
-
-# ----------------------------------------
-# Flask routes / JSON APIs
-# ----------------------------------------
 
 @app.route("/")
 def home():
