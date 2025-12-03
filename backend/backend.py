@@ -14,7 +14,7 @@ CORS(app)
 # ----------------------------------------
 BASE_DIR = Path(__file__).parent.parent  # project folder
 DATA_DIR = BASE_DIR / "data"
-LOG_PATH = DATA_DIR / "logs.txt"         # change if your file name is different
+LOG_PATH = DATA_DIR / "final_logs.txt"         # change if your file name is different
 LAYOUT_PATH = DATA_DIR / "layout.json"
 
 
