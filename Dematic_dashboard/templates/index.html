@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Warehouse Live View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h1>Warehouse Live Pallet Visualisation</h1>
+    <p class="page-meta">
+        Showing the latest 10 events of each type from the live log file.
+        This page refreshes automatically every 10 seconds.
+    </p>
+
+    <!-- PALLET SEARCH -->
+    <form method="get" class="pallet-form">
+        <label for="pallet_id">Search pallet journey:</label>
+        <input
+            type="text"
+            id="pallet_id"
+            name="pallet_id"
+            placeholder="Enter 8-digit pallet ID"
+            value="{{ searched_id or '' }}"
+        >
+        <button type="submit">Search</button>
+    </form>
+
+    {% if searched_id %}
+        <div class="row" id="pallet-history">
+            <input type="checkbox" id="row0" checked>
+            <label for="row0" class="row-header">
+                <span>Pallet {{ searched_id }} history</span>
+                <span class="row-count">{{ history|length }} events</span>
+            </label>
+            <div class="row-content">
+                {% if history %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Step</th>
+                                <th>Event</th>
+                                <th>From</th>
+                                <th>To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for step_no, e, f, t in history %}
+                                <tr>
+                                    <td>{{ step_no }}</td>
+                                    <td>{{ e }}</td>
+                                    <td>{{ f }}</td>
+                                    <td>{{ t }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No events found for pallet {{ searched_id }}.</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- ARRIVAL SECTION -->
+    <div class="row" id="arrival-section">
+        <input type="checkbox" id="row1" checked>
+        <label for="row1" class="row-header">
+            <span>Latest ARRIVAL Messages</span>
+            <span class="row-count">{{ arrivals|length }} shown</span>
+        </label>
+
+        <div class="row-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Pallet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if arrivals %}
+                        {% for e, f, t, p in arrivals %}
+                            <tr>
+                                <td>{{ e }}</td>
+                                <td>{{ f }}</td>
+                                <td>{{ t }}</td>
+                                <td>{{ p }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="4">No ARRIVAL events found.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SETDEST SECTION -->
+    <div class="row" id="setdest-section">
+        <input type="checkbox" id="row2" checked>
+        <label for="row2" class="row-header">
+            <span>Latest SETDEST Messages</span>
+            <span class="row-count">{{ setdest|length }} shown</span>
+        </label>
+
+        <div class="row-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Pallet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if setdest %}
+                        {% for e, f, t, p in setdest %}
+                            <tr>
+                                <td>{{ e }}</td>
+                                <td>{{ f }}</td>
+                                <td>{{ t }}</td>
+                                <td>{{ p }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="4">No SETDEST events found.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- EXIT SECTION -->
+    <div class="row" id="exit-section">
+        <input type="checkbox" id="row3" checked>
+        <label for="row3" class="row-header">
+            <span>Latest EXIT Messages</span>
+            <span class="row-count">{{ exits|length }} shown</span>
+        </label>
+
+        <div class="row-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Pallet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if exits %}
+                        {% for e, f, t, p in exits %}
+                            <tr>
+                                <td>{{ e }}</td>
+                                <td>{{ f }}</td>
+                                <td>{{ t }}</td>
+                                <td>{{ p }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="4">No EXIT events found.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Auto-refresh every 10 seconds -->
+    <script>
+        setInterval(function () {
+            window.location.reload();
+        }, 10000);
+    </script>
+</body>
+</html>
