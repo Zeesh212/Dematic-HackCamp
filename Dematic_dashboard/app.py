@@ -3,12 +3,10 @@ import os
 
 app = Flask(__name__)
 
-# Log file in this folder
 LOG_PATH = "final_logs.txt.txt"
 
 
 def parse_logs():
-    """Return last 10 ARRIVAL, SETDEST and EXIT events for the live view."""
     arrivals = []
     setdest = []
     exits = []
@@ -26,11 +24,9 @@ def parse_logs():
             frm = parts[2].strip() if len(parts) > 2 else ""
             to = parts[3].strip() if len(parts) > 3 else ""
 
-            # Some SETDEST lines have destination further along
             if event == "SETDEST" and not to and len(parts) > 4:
                 to = parts[4].strip()
 
-            # Pallet ID = first 8-digit number in the line
             pallet_id = ""
             for word in line.split():
                 if word.isdigit() and len(word) == 8:
@@ -106,4 +102,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
