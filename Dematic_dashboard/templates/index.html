@@ -2,179 +2,104 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Warehouse Live View</title>
+    <title>Dematic Live Overview</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <h1>Warehouse Live Pallet Visualisation</h1>
-    <p class="page-meta">
-        Showing the latest 10 events of each type from the live log file.
-        This page refreshes automatically every 10 seconds.
-    </p>
 
-    <!-- PALLET SEARCH -->
-    <form method="get" class="pallet-form">
-        <label for="pallet_id">Search pallet journey:</label>
-        <input
-            type="text"
-            id="pallet_id"
-            name="pallet_id"
-            placeholder="Enter 8-digit pallet ID"
-            value="{{ searched_id or '' }}"
-        >
-        <button type="submit">Search</button>
-    </form>
+<h1>Dematic – Live Overview</h1>
 
-    {% if searched_id %}
-        <div class="row" id="pallet-history">
-            <input type="checkbox" id="row0" checked>
-            <label for="row0" class="row-header">
-                <span>Pallet {{ searched_id }} history</span>
-                <span class="row-count">{{ history|length }} events</span>
-            </label>
-            <div class="row-content">
-                {% if history %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Step</th>
-                                <th>Event</th>
-                                <th>From</th>
-                                <th>To</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for step_no, e, f, t in history %}
-                                <tr>
-                                    <td>{{ step_no }}</td>
-                                    <td>{{ e }}</td>
-                                    <td>{{ f }}</td>
-                                    <td>{{ t }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p>No events found for pallet {{ searched_id }}.</p>
-                {% endif %}
-            </div>
-        </div>
-    {% endif %}
+<!-- SEARCH BAR -->
+<form method="get" class="search-area">
+    <label>Pallet ID:</label>
+    <input type="text" name="pallet_id" placeholder="Enter 8-digit ID" value="{{ searched_id }}">
+    <button type="submit">Search</button>
+</form>
 
-    <!-- ARRIVAL SECTION -->
-    <div class="row" id="arrival-section">
-        <input type="checkbox" id="row1" checked>
-        <label for="row1" class="row-header">
-            <span>Latest ARRIVAL Messages</span>
-            <span class="row-count">{{ arrivals|length }} shown</span>
-        </label>
+<!-- MAIN LAYOUT WRAPPER -->
+<div class="layout">
 
-        <div class="row-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Pallet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if arrivals %}
-                        {% for e, f, t, p in arrivals %}
-                            <tr>
-                                <td>{{ e }}</td>
-                                <td>{{ f }}</td>
-                                <td>{{ t }}</td>
-                                <td>{{ p }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr><td colspan="4">No ARRIVAL events found.</td></tr>
-                    {% endif %}
-                </tbody>
-            </table>
+    <!-- LEFT SECTION: DIAGRAM -->
+    <div class="diagram-box">
+        <h2>System Layout</h2>
+
+        <div class="diagram">
+            <div class="node">INBOUND01</div>
+            <div class="arrow">↓</div>
+            <div class="node">NOTIPOINT01</div>
+            <div class="arrow">→</div>
+            <div class="node">NOTIPOINT02</div>
+            <div class="arrow">→</div>
+            <div class="node">DEPOINT01</div>
+
+            <div class="arrow down">↓</div>
+            <div class="node small">OUTPOINT01</div>
+
+            <div class="arrow right">→</div>
+            <div class="node small">OUTPOINT02</div>
         </div>
     </div>
 
-    <!-- SETDEST SECTION -->
-    <div class="row" id="setdest-section">
-        <input type="checkbox" id="row2" checked>
-        <label for="row2" class="row-header">
-            <span>Latest SETDEST Messages</span>
-            <span class="row-count">{{ setdest|length }} shown</span>
-        </label>
+    <!-- RIGHT SECTION: PALLET DETAILS + FAULT LIST -->
+    <div class="side-info">
 
-        <div class="row-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Pallet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if setdest %}
-                        {% for e, f, t, p in setdest %}
-                            <tr>
-                                <td>{{ e }}</td>
-                                <td>{{ f }}</td>
-                                <td>{{ t }}</td>
-                                <td>{{ p }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr><td colspan="4">No SETDEST events found.</td></tr>
-                    {% endif %}
-                </tbody>
-            </table>
+        <!-- SELECTED PALLET -->
+        <div class="panel">
+            <h2>Selected Pallet</h2>
+
+            {% if searched_id %}
+                <p><b>Pallet ID:</b> {{ searched_id }}</p>
+                <p><b>Current Location:</b> {{ current_location or "Unknown" }}</p>
+                <p><b>Next Destination:</b> {{ next_destination or "Unknown" }}</p>
+                <p><b>Status:</b> {{ status or "Unknown" }}</p>
+            {% else %}
+                <p>No pallet selected.</p>
+            {% endif %}
         </div>
-    </div>
 
-    <!-- EXIT SECTION -->
-    <div class="row" id="exit-section">
-        <input type="checkbox" id="row3" checked>
-        <label for="row3" class="row-header">
-            <span>Latest EXIT Messages</span>
-            <span class="row-count">{{ exits|length }} shown</span>
-        </label>
-
-        <div class="row-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Pallet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if exits %}
-                        {% for e, f, t, p in exits %}
-                            <tr>
-                                <td>{{ e }}</td>
-                                <td>{{ f }}</td>
-                                <td>{{ t }}</td>
-                                <td>{{ p }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr><td colspan="4">No EXIT events found.</td></tr>
-                    {% endif %}
-                </tbody>
-            </table>
+        <!-- FAULT LIST -->
+        <div class="panel">
+            <h2>Fault List</h2>
+            <p>No faults detected.</p>
         </div>
-    </div>
 
-    <!-- Auto-refresh every 10 seconds -->
-    <script>
-        setInterval(function () {
-            window.location.reload();
-        }, 10000);
-    </script>
+    </div>
+</div>
+
+<hr>
+
+<!-- ARRIVAL TABLE -->
+<h2>Latest ARRIVAL Messages</h2>
+<table>
+    <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
+    {% for e,f,t,p in arrivals %}
+        <tr><td>{{ e }}</td><td>{{ f }}</td><td>{{ t }}</td><td>{{ p }}</td></tr>
+    {% endfor %}
+</table>
+
+<!-- SETDEST TABLE -->
+<h2>Latest SETDEST Messages</h2>
+<table>
+    <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
+    {% for e,f,t,p in setdest %}
+        <tr><td>{{ e }}</td><td>{{ f }}</td><td>{{ t }}</td><td>{{ p }}</td></tr>
+    {% endfor %}
+</table>
+
+<!-- EXIT TABLE -->
+<h2>Latest EXIT Messages</h2>
+<table>
+    <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
+    {% for e,f,t,p in exits %}
+        <tr><td>{{ e }}</td><td>{{ f }}</td><td>{{ t }}</td><td>{{ p }}</td></tr>
+    {% endfor %}
+</table>
+
+<!-- AUTO REFRESH -->
+<script>
+    setInterval(() => window.location.reload(), 10000);
+</script>
+
 </body>
 </html>
