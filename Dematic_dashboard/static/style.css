@@ -15,7 +15,6 @@ h1 {
     color: #a0a5b5;
 }
 
-/* Pallet search form */
 .pallet-form {
     margin-bottom: 20px;
     display: flex;
@@ -84,7 +83,6 @@ h1 {
     padding: 0 16px;
 }
 
-/* When the checkbox is checked, expand the content */
 .row input:checked ~ .row-content {
     max-height: 800px;
     padding-bottom: 16px;
@@ -108,3 +106,4 @@ th {
     font-weight: bold;
     color: #d5dbec;
 }
+
