@@ -10,41 +10,21 @@
 
 <h1>Dematic – Live Overview</h1>
 
-<!-- SEARCH BAR -->
 <form method="get" class="search-area">
     <label>Pallet ID:</label>
     <input type="text" name="pallet_id" placeholder="Enter 8-digit ID" value="{{ searched_id }}">
     <button type="submit">Search</button>
 </form>
 
-<!-- MAIN LAYOUT WRAPPER -->
 <div class="layout">
 
-    <!-- LEFT SECTION: DIAGRAM -->
     <div class="diagram-box">
         <h2>System Layout</h2>
 
-        <div class="diagram">
-            <div class="node">INBOUND01</div>
-            <div class="arrow">↓</div>
-            <div class="node">NOTIPOINT01</div>
-            <div class="arrow">→</div>
-            <div class="node">NOTIPOINT02</div>
-            <div class="arrow">→</div>
-            <div class="node">DEPOINT01</div>
-
-            <div class="arrow down">↓</div>
-            <div class="node small">OUTPOINT01</div>
-
-            <div class="arrow right">→</div>
-            <div class="node small">OUTPOINT02</div>
-        </div>
     </div>
 
-    <!-- RIGHT SECTION: PALLET DETAILS + FAULT LIST -->
     <div class="side-info">
 
-        <!-- SELECTED PALLET -->
         <div class="panel">
             <h2>Selected Pallet</h2>
 
@@ -58,7 +38,6 @@
             {% endif %}
         </div>
 
-        <!-- FAULT LIST -->
         <div class="panel">
             <h2>Fault List</h2>
             <p>No faults detected.</p>
@@ -69,7 +48,6 @@
 
 <hr>
 
-<!-- ARRIVAL TABLE -->
 <h2>Latest ARRIVAL Messages</h2>
 <table>
     <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
@@ -78,7 +56,6 @@
     {% endfor %}
 </table>
 
-<!-- SETDEST TABLE -->
 <h2>Latest SETDEST Messages</h2>
 <table>
     <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
@@ -87,7 +64,6 @@
     {% endfor %}
 </table>
 
-<!-- EXIT TABLE -->
 <h2>Latest EXIT Messages</h2>
 <table>
     <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
@@ -96,7 +72,6 @@
     {% endfor %}
 </table>
 
-<!-- AUTO REFRESH -->
 <script>
     setInterval(() => window.location.reload(), 10000);
 </script>
