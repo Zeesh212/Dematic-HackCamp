@@ -21,30 +21,6 @@ h1 {
     border-radius: 6px;
 }
 
-.diagram {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.node {
-    padding: 10px 14px;
-    background: #cfe2ff;
-    border: 1px solid #b6d4fe;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.node.small {
-    padding: 6px 10px;
-}
-
-.arrow {
-    font-size: 20px;
-    margin: 0 4px;
-}
-
 .panel {
     margin-bottom: 20px;
     padding: 12px;
@@ -72,4 +48,77 @@ th, td {
 
 .search-area input {
     padding: 6px;
+}
+
+
+#sim-container {
+    margin-top: 15px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px 0;
+}
+
+.node {
+    background: #dce7ff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 2px solid #9db8ff;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.node.inbound {
+    background: #4f8bff;     
+    border-color: #003b99;  
+    color: white;      
+}
+
+.node.small {
+    padding: 6px 10px;
+}
+
+.node.active {
+    background: #4f8bff;
+    color: white;
+    border-color: #003b99;
+    box-shadow: 0 0 12px #4f8bff;
+}
+
+.arrow {
+    font-size: 20px;
+    margin: 0 6px;
+}
+
+.arrow.h {
+    margin: 0 10px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.arrow.v {
+    font-size: 26px;
+    margin: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.row.center {
+    justify-content: center;
+}
+
+.row.space {
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+#sim-container .row {
+    min-height: 50px;
 }
