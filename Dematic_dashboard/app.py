@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import os
 import re
 
@@ -8,13 +8,11 @@ LOG_PATH = "final_logs.txt.txt"
 
 
 def extract_pallet_id(line):
-    """Find any 8-digit pallet ID in the line."""
     match = re.search(r"\b(\d{8})\b", line)
     return match.group(1) if match else ""
 
 
 def parse_logs():
-    """Get the latest 10 ARRIVAL, SETDEST, EXIT messages."""
     arrivals = []
     setdest = []
     exits = []
@@ -48,7 +46,6 @@ def parse_logs():
 
 
 def get_pallet_history(pallet_id):
-    """Return every event that involves the selected pallet."""
     if not pallet_id or not os.path.exists(LOG_PATH):
         return []
 
@@ -75,6 +72,27 @@ def get_pallet_history(pallet_id):
     return history
 
 
+@app.route("/pallet_path/<pallet_id>")
+def pallet_path(pallet_id):
+    history = get_pallet_history(pallet_id)
+    if not history:
+        return jsonify({"error": "Not found"}), 404
+
+    visited = []
+
+    for step, event, frm, to in history:
+        if event == "ARRIVAL" and to:
+            visited.append(to)
+        elif event == "SETDEST" and to:
+            visited.append(to)
+
+    return jsonify({
+        "pallet": pallet_id,
+        "visited": visited,
+        "current": visited[-1] if visited else None
+    })
+
+
 @app.route("/")
 def index():
     arrivals, setdest, exits = parse_logs()
@@ -82,7 +100,6 @@ def index():
     selected = request.args.get("pallet_id", "").strip()
     history = get_pallet_history(selected) if selected else []
 
-    # Determine pallet status
     current_location = ""
     next_destination = ""
     status = ""
@@ -91,14 +108,19 @@ def index():
         last = history[-1]
         _, event, frm, to = last
 
-        if event == "ARRIVAL":
-            status = "Arrived"
-            current_location = frm
-
-        elif event == "SETDEST":
+        if event == "SETDEST":
             status = "Moving"
             current_location = frm
             next_destination = to
+
+        elif event == "ARRIVAL":
+        
+            if to and to.startswith("OUTPOINT"):
+                status = "Exited"
+                current_location = to
+            else:
+                status = "Arrived"
+                current_location = to or frm 
 
         elif event == "LOCEXIT":
             status = "Exited"
