@@ -21,19 +21,46 @@
     <div class="diagram-box">
         <h2>System Layout</h2>
 
-    <pre class="system-diagram">
-INBOUND01
-    ↓
-NOTIPOINT01 → NOTIPOINT02 → NOTIPOINT03 → NOTIPOINT04
-                                           ↓
-                                       DEPOINT01 → DEPOINT02 → DEPOINT03
-                                           ↓         ↓          ↓
-                                       OUTPOINT01 OUTPOINT02 OUTPOINT03
-    </pre>
+        <div id="sim-container">
 
-</div>
+            <div class="row center">
+                <div class="node inbound" id="INBOUND01">INBOUND01</div>
+            </div>
 
+            <div class="arrow v">↓</div>
 
+            <div class="row">
+                <div class="node" id="NOTIPOINT01">NOTIPOINT01</div>
+                <div class="arrow h">→</div>
+
+                <div class="node" id="NOTIPOINT02">NOTIPOINT02</div>
+                <div class="arrow h">→</div>
+
+                <div class="node" id="NOTIPOINT03">NOTIPOINT03</div>
+                <div class="arrow h">→</div>
+
+                <div class="node" id="NOTIPOINT04">NOTIPOINT04</div>
+            </div>
+
+            <div class="arrow v">↓</div>
+
+            <div class="row">
+                <div class="node" id="DEPOINT01">DEPOINT01</div>
+                <div class="arrow h">→</div>
+
+                <div class="node" id="DEPOINT02">DEPOINT02</div>
+                <div class="arrow h">→</div>
+
+                <div class="node" id="DEPOINT03">DEPOINT03</div>
+            </div>
+
+            <div class="row space">
+                <div class="node small" id="OUTPOINT01">OUTPOINT01</div>
+                <div class="node small" id="OUTPOINT02">OUTPOINT02</div>
+                <div class="node small" id="OUTPOINT03">OUTPOINT03</div>
+            </div>
+
+        </div>
     </div>
 
     <div class="side-info">
@@ -49,11 +76,6 @@ NOTIPOINT01 → NOTIPOINT02 → NOTIPOINT03 → NOTIPOINT04
             {% else %}
                 <p>No pallet selected.</p>
             {% endif %}
-        </div>
-
-        <div class="panel">
-            <h2>Fault List</h2>
-            <p>No faults detected.</p>
         </div>
 
     </div>
@@ -87,8 +109,39 @@ NOTIPOINT01 → NOTIPOINT02 → NOTIPOINT03 → NOTIPOINT04
 
 <script>
     setInterval(() => window.location.reload(), 10000);
+
+    function clearAllHighlights() {
+        document.querySelectorAll(".node").forEach(n => n.classList.remove("active"));
+    }
+
+    function highlightNode(id) {
+        const node = document.getElementById(id);
+        if (node) node.classList.add("active");
+    }
+
+    async function updateSimulation() {
+        const palletId = "{{ searched_id }}";
+        if (!palletId) return;
+
+        const res = await fetch(`/pallet_path/${palletId}`);
+        const data = await res.json();
+        if (data.error) return;
+
+        clearAllHighlights();
+
+        let i = 0;
+        function step() {
+            if (i >= data.visited.length) return;
+            highlightNode(data.visited[i]);
+            i++;
+            setTimeout(step, 700);
+        }
+        step();
+    }
+
+    setInterval(updateSimulation, 5000);
+    updateSimulation();
 </script>
 
 </body>
 </html>
-
