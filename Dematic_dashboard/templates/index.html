@@ -8,15 +8,23 @@
 
 <body>
 
-<h1>Dematic – Live Overview</h1>
+<header class="top-bar">
+    <h1>Dematic – Live Overview</h1>
 
-<form method="get" class="search-area">
-    <label>Pallet ID:</label>
-    <input type="text" name="pallet_id" placeholder="Enter 8-digit ID" value="{{ searched_id }}">
-    <button type="submit">Search</button>
-</form>
+    <form method="get" class="search-area">
+        <label for="pallet-search">Pallet ID:</label>
+        <input id="pallet-search"
+               type="text"
+               name="pallet_id"
+               placeholder="Enter 8-digit ID"
+               value="{{ searched_id }}">
+        <button type="submit">Search</button>
+    </form>
+</header>
 
-<div class="layout">
+<main>
+
+<section class="layout-fullwidth">
 
     <div class="diagram-box">
         <h2>System Layout</h2>
@@ -54,89 +62,233 @@
                 <div class="node" id="DEPOINT03">DEPOINT03</div>
             </div>
 
-            <div class="row space">
-                <div class="node small" id="OUTPOINT01">OUTPOINT01</div>
-                <div class="node small" id="OUTPOINT02">OUTPOINT02</div>
-                <div class="node small" id="OUTPOINT03">OUTPOINT03</div>
+            <div class="row arrow-row">
+                <div class="arrow v">↙</div>
+                <div class="arrow v">↓</div>
+                <div class="arrow v">↘</div>
+            </div>
+
+            <div class="row">
+                <div class="node" id="OUTPOINT01">OUTPOINT01</div>
+                <div class="node" id="OUTPOINT02">OUTPOINT02</div>
+                <div class="node" id="OUTPOINT03">OUTPOINT03</div>
             </div>
 
         </div>
     </div>
 
-    <div class="side-info">
+</section>
+
+<section class="layout">
+
+    <aside class="side-info">
 
         <div class="panel">
             <h2>Selected Pallet</h2>
 
             {% if searched_id %}
-                <p><b>Pallet ID:</b> {{ searched_id }}</p>
-                <p><b>Current Location:</b> {{ current_location or "Unknown" }}</p>
-                <p><b>Next Destination:</b> {{ next_destination or "Unknown" }}</p>
-                <p><b>Status:</b> {{ status or "Unknown" }}</p>
+                <p><strong>Pallet ID:</strong> {{ searched_id }}</p>
+                <p><strong>Current Location:</strong> {{ current_location or "Unknown" }}</p>
+                <p><strong>Next Destination:</strong> {{ next_destination or "Unknown" }}</p>
+                <p><strong>Status:</strong> {{ status or "Unknown" }}</p>
             {% else %}
-                <p>No pallet selected.</p>
+                <p>No pallet selected. Use the search box above to focus on a pallet.</p>
             {% endif %}
         </div>
 
+        <div class="panel">
+            <h2>Current Flow</h2>
+            {% if current_pallet_id %}
+                <p><strong>Current Pallet:</strong> {{ current_pallet_id }}</p>
+            {% else %}
+                <p><strong>Current Pallet:</strong> None active</p>
+            {% endif %}
+
+            {% if next_pallet_id %}
+                <p><strong>Next Pallet:</strong> {{ next_pallet_id }}</p>
+            {% else %}
+                <p><strong>Next Pallet:</strong> Not available</p>
+            {% endif %}
+            <p class="panel-note">
+                If no pallet is selected, the animation follows the current pallet automatically.
+            </p>
+        </div>
+
+        <div class="panel">
+            <h2>Faults</h2>
+            {% if latest_faults %}
+                <div class="table-scroll small">
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                            <th>Location</th>
+                            <th>Pallet</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for f in latest_faults %}
+                            <tr>
+                                <td>{{ f.timestamp }}</td>
+                                <td>{{ f.event }}</td>
+                                <td>
+                                    {% if f.to %}
+                                        {{ f.to }}
+                                    {% elif f.from %}
+                                        {{ f.from }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ f.pallet or "-" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No active faults detected.</p>
+            {% endif %}
+        </div>
+
+        {% if history %}
+            <div class="panel">
+                <h2>Pallet History</h2>
+                <div class="table-scroll small">
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Event</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for step, event, frm, to in history %}
+                            <tr>
+                                <td>{{ step }}</td>
+                                <td>{{ event }}</td>
+                                <td>{{ frm or "-" }}</td>
+                                <td>{{ to or "-" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+
+    </aside>
+
+</section>
+
+<section class="bottom-layout">
+
+    <div class="panel wide-panel">
+        <h2>Live Event Stream</h2>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Event</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Pallet</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for e in latest_events %}
+                    <tr>
+                        <td>{{ e.timestamp }}</td>
+                        <td>{{ e.event }}</td>
+                        <td>{{ e.from or "-" }}</td>
+                        <td>{{ e.to or "-" }}</td>
+                        <td>{{ e.pallet or "-" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<hr>
+    <div class="panel wide-panel">
+        <h2>Current Pallets in System</h2>
+        {% if pallet_summary %}
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Pallet</th>
+                        <th>Status</th>
+                        <th>Current Location</th>
+                        <th>Next Destination</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in pallet_summary %}
+                        <tr>
+                            <td>{{ p.pallet }}</td>
+                            <td>{{ p.status }}</td>
+                            <td>{{ p.current_location or "-" }}</td>
+                            <td>{{ p.next_destination or "-" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No pallets currently in the system.</p>
+        {% endif %}
+    </div>
 
-<h2>Latest ARRIVAL Messages</h2>
-<table>
-    <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
-    {% for e,f,t,p in arrivals %}
-        <tr><td>{{ e }}</td><td>{{ f }}</td><td>{{ t }}</td><td>{{ p }}</td></tr>
-    {% endfor %}
-</table>
+</section>
 
-<h2>Latest SETDEST Messages</h2>
-<table>
-    <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
-    {% for e,f,t,p in setdest %}
-        <tr><td>{{ e }}</td><td>{{ f }}</td><td>{{ t }}</td><td>{{ p }}</td></tr>
-    {% endfor %}
-</table>
-
-<h2>Latest EXIT Messages</h2>
-<table>
-    <tr><th>Event</th><th>From</th><th>To</th><th>Pallet</th></tr>
-    {% for e,f,t,p in exits %}
-        <tr><td>{{ e }}</td><td>{{ f }}</td><td>{{ t }}</td><td>{{ p }}</td></tr>
-    {% endfor %}
-</table>
+</main>
 
 <script>
-    setInterval(() => window.location.reload(), 10000);
+    setInterval(function () {
+        window.location.reload();
+    }, 10000);
 
     function clearAllHighlights() {
         document.querySelectorAll(".node").forEach(n => n.classList.remove("active"));
     }
 
     function highlightNode(id) {
-        const node = document.getElementById(id);
+        var node = document.getElementById(id);
         if (node) node.classList.add("active");
     }
 
     async function updateSimulation() {
-        const palletId = "{{ searched_id }}";
+        var searchedId = "{{ searched_id or '' }}";
+        var currentPalletId = "{{ current_pallet_id or '' }}";
+
+        var palletId = searchedId || currentPalletId;
         if (!palletId) return;
 
-        const res = await fetch(`/pallet_path/${palletId}`);
-        const data = await res.json();
-        if (data.error) return;
+        try {
+            var res = await fetch("/pallet_path/" + palletId);
+            if (!res.ok) return;
 
-        clearAllHighlights();
+            var data = await res.json();
+            if (data.error) return;
 
-        let i = 0;
-        function step() {
-            if (i >= data.visited.length) return;
-            highlightNode(data.visited[i]);
-            i++;
-            setTimeout(step, 700);
+            clearAllHighlights();
+
+            let i = 0;
+            function step() {
+                if (!data.visited || i >= data.visited.length) return;
+                highlightNode(data.visited[i]);
+                i++;
+                setTimeout(step, 700);
+            }
+            step();
+        } catch (err) {
+            console.error("Simulation update failed", err);
         }
-        step();
     }
 
     setInterval(updateSimulation, 5000);
