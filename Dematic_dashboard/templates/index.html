@@ -31,50 +31,48 @@
 
         <div id="sim-container">
 
-            <div class="row center">
-                <div class="node inbound" id="INBOUND01">INBOUND01</div>
-            </div>
+    <div class="row top">
+        <div class="node" id="OUTPOINT01">OUTPOINT01</div>
+        <div class="node" id="OUTPOINT02">OUTPOINT02</div>
+        <div class="node" id="OUTPOINT03">OUTPOINT03</div>
+    </div>
 
-            <div class="arrow v">↓</div>
+    <div class="row arrow-row">
+        <div class="arrow v">↑</div>
+    </div>
 
-            <div class="row">
-                <div class="node" id="NOTIPOINT01">NOTIPOINT01</div>
-                <div class="arrow h">→</div>
+    <div class="row">
+        <div class="node" id="DEPOINT01">DEPOINT01</div>
+        <div class="arrow h">→</div>
 
-                <div class="node" id="NOTIPOINT02">NOTIPOINT02</div>
-                <div class="arrow h">→</div>
+        <div class="node" id="DEPOINT02">DEPOINT02</div>
+        <div class="arrow h">→</div>
 
-                <div class="node" id="NOTIPOINT03">NOTIPOINT03</div>
-                <div class="arrow h">→</div>
+        <div class="node" id="DEPOINT03">DEPOINT03</div>
+    </div>
 
-                <div class="node" id="NOTIPOINT04">NOTIPOINT04</div>
-            </div>
+    <div class="arrow v">↑</div>
 
-            <div class="arrow v">↓</div>
+    <div class="row">
+        <div class="node" id="NOTIPOINT01">NOTIPOINT01</div>
+        <div class="arrow h">→</div>
 
-            <div class="row">
-                <div class="node" id="DEPOINT01">DEPOINT01</div>
-                <div class="arrow h">→</div>
+        <div class="node" id="NOTIPOINT02">NOTIPOINT02</div>
+        <div class="arrow h">→</div>
 
-                <div class="node" id="DEPOINT02">DEPOINT02</div>
-                <div class="arrow h">→</div>
+        <div class="node" id="NOTIPOINT03">NOTIPOINT03</div>
+        <div class="arrow h">→</div>
 
-                <div class="node" id="DEPOINT03">DEPOINT03</div>
-            </div>
+        <div class="node" id="NOTIPOINT04">NOTIPOINT04</div>
+    </div>
 
-            <div class="row arrow-row">
-                <div class="arrow v">↙</div>
-                <div class="arrow v">↓</div>
-                <div class="arrow v">↘</div>
-            </div>
+    <div class="arrow v">↑</div>
 
-            <div class="row">
-                <div class="node" id="OUTPOINT01">OUTPOINT01</div>
-                <div class="node" id="OUTPOINT02">OUTPOINT02</div>
-                <div class="node" id="OUTPOINT03">OUTPOINT03</div>
-            </div>
+    <div class="row center">
+        <div class="node inbound" id="INBOUND01">INBOUND01</div>
+    </div>
 
-        </div>
+</div>
     </div>
 
 </section>
@@ -88,9 +86,9 @@
 
             {% if searched_id %}
                 <p><strong>Pallet ID:</strong> {{ searched_id }}</p>
-                <p><strong>Current Location:</strong> {{ current_location or "Unknown" }}</p>
-                <p><strong>Next Destination:</strong> {{ next_destination or "Unknown" }}</p>
-                <p><strong>Status:</strong> {{ status or "Unknown" }}</p>
+                <p><strong>Current Location:</strong> {{ current_location }}</p>
+                <p><strong>Next Destination:</strong> {{ next_destination }}</p>
+                <p><strong>Status:</strong> {{ status }}</p>
             {% else %}
                 <p>No pallet selected. Use the search box above to focus on a pallet.</p>
             {% endif %}
@@ -98,19 +96,17 @@
 
         <div class="panel">
             <h2>Current Flow</h2>
-            {% if current_pallet_id %}
-                <p><strong>Current Pallet:</strong> {{ current_pallet_id }}</p>
-            {% else %}
-                <p><strong>Current Pallet:</strong> None active</p>
-            {% endif %}
 
-            {% if next_pallet_id %}
-                <p><strong>Next Pallet:</strong> {{ next_pallet_id }}</p>
-            {% else %}
-                <p><strong>Next Pallet:</strong> Not available</p>
-            {% endif %}
+            <p><strong>Current Pallet:</strong>
+                {{ current_pallet_id or "None active" }}
+            </p>
+
+            <p><strong>Next Pallet:</strong>
+                {{ next_pallet_id or "Not available" }}
+            </p>
+
             <p class="panel-note">
-                If no pallet is selected, the animation follows the current pallet automatically.
+                If no pallet is selected, the animation follows the current pallet.
             </p>
         </div>
 
@@ -120,12 +116,12 @@
                 <div class="table-scroll small">
                     <table class="small-table">
                         <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Event</th>
-                            <th>Location</th>
-                            <th>Pallet</th>
-                        </tr>
+                            <tr>
+                                <th>Time</th>
+                                <th>Event</th>
+                                <th>Location</th>
+                                <th>Pallet</th>
+                            </tr>
                         </thead>
                         <tbody>
                         {% for f in latest_faults %}
@@ -133,13 +129,7 @@
                                 <td>{{ f.timestamp }}</td>
                                 <td>{{ f.event }}</td>
                                 <td>
-                                    {% if f.to %}
-                                        {{ f.to }}
-                                    {% elif f.from %}
-                                        {{ f.from }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
+                                    {% if f.to %}{{ f.to }}{% elif f.from %}{{ f.from }}{% else %}-{% endif %}
                                 </td>
                                 <td>{{ f.pallet or "-" }}</td>
                             </tr>
@@ -158,12 +148,12 @@
                 <div class="table-scroll small">
                     <table class="small-table">
                         <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Event</th>
-                            <th>From</th>
-                            <th>To</th>
-                        </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Event</th>
+                                <th>From</th>
+                                <th>To</th>
+                            </tr>
                         </thead>
                         <tbody>
                         {% for step, event, frm, to in history %}
@@ -191,16 +181,16 @@
         <div class="table-scroll">
             <table>
                 <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Event</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Pallet</th>
-                </tr>
+                    <tr>
+                        <th>Time</th>
+                        <th>Event</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Pallet</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {% for e in latest_events %}
+                    {% for e in latest_events %}
                     <tr>
                         <td>{{ e.timestamp }}</td>
                         <td>{{ e.event }}</td>
@@ -208,7 +198,7 @@
                         <td>{{ e.to or "-" }}</td>
                         <td>{{ e.pallet or "-" }}</td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -220,22 +210,22 @@
             <div class="table-scroll">
                 <table>
                     <thead>
-                    <tr>
-                        <th>Pallet</th>
-                        <th>Status</th>
-                        <th>Current Location</th>
-                        <th>Next Destination</th>
-                    </tr>
+                        <tr>
+                            <th>Pallet</th>
+                            <th>Status</th>
+                            <th>Current Location</th>
+                            <th>Next Destination</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {% for p in pallet_summary %}
-                        <tr>
-                            <td>{{ p.pallet }}</td>
-                            <td>{{ p.status }}</td>
-                            <td>{{ p.current_location or "-" }}</td>
-                            <td>{{ p.next_destination or "-" }}</td>
-                        </tr>
-                    {% endfor %}
+                        {% for p in pallet_summary %}
+                            <tr>
+                                <td>{{ p.pallet }}</td>
+                                <td>{{ p.status }}</td>
+                                <td>{{ p.current_location }}</td>
+                                <td>{{ p.next_destination or "-" }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -248,51 +238,87 @@
 
 </main>
 
+
 <script>
-    setInterval(function () {
-        window.location.reload();
-    }, 10000);
 
-    function clearAllHighlights() {
-        document.querySelectorAll(".node").forEach(n => n.classList.remove("active"));
-    }
+function clearMultiHighlights() {
+    document.querySelectorAll("[class*='palcol-']").forEach(el => {
+        el.classList.remove(...el.classList);
+        el.classList.add("node");
+    });
+}
 
-    function highlightNode(id) {
-        var node = document.getElementById(id);
-        if (node) node.classList.add("active");
-    }
+async function updateAllPalletPositions() {
+    try {
+        const res = await fetch("/all_pallet_positions");
+        if (!res.ok) return;
 
-    async function updateSimulation() {
-        var searchedId = "{{ searched_id or '' }}";
-        var currentPalletId = "{{ current_pallet_id or '' }}";
+        const data = await res.json();
 
-        var palletId = searchedId || currentPalletId;
-        if (!palletId) return;
+        clearMultiHighlights();
 
-        try {
-            var res = await fetch("/pallet_path/" + palletId);
-            if (!res.ok) return;
+        let colourIndex = 1;
 
-            var data = await res.json();
-            if (data.error) return;
+        for (const palletId in data) {
+            const loc = data[palletId];
+            const node = document.getElementById(loc);
+            if (!node) continue;
 
-            clearAllHighlights();
+            const colClass = "palcol-" + (colourIndex % 12);
+            node.classList.add(colClass);
 
-            let i = 0;
-            function step() {
-                if (!data.visited || i >= data.visited.length) return;
-                highlightNode(data.visited[i]);
-                i++;
-                setTimeout(step, 700);
-            }
-            step();
-        } catch (err) {
-            console.error("Simulation update failed", err);
+            colourIndex++;
         }
-    }
 
-    setInterval(updateSimulation, 5000);
-    updateSimulation();
+    } catch (err) {
+        console.error("Position update failed", err);
+    }
+}
+
+setInterval(updateAllPalletPositions, 2000);
+updateAllPalletPositions();
+
+function clearAllHighlights() {
+    document.querySelectorAll(".node").forEach(n => n.classList.remove("active"));
+}
+
+function highlightNode(id) {
+    var node = document.getElementById(id);
+    if (node) node.classList.add("active");
+}
+
+async function updateSimulation() {
+    var searchedId = "{{ searched_id or '' }}";
+    var currentPalletId = "{{ current_pallet_id or '' }}";
+
+    var palletId = searchedId || currentPalletId;
+    if (!palletId) return;
+
+    try {
+        var res = await fetch("/pallet_path/" + palletId);
+        if (!res.ok) return;
+
+        var data = await res.json();
+        if (data.error) return;
+
+        clearAllHighlights();
+
+        let i = 0;
+        function step() {
+            if (!data.visited || i >= data.visited.length) return;
+            highlightNode(data.visited[i]);
+            i++;
+            setTimeout(step, 700);
+        }
+        step();
+    } catch (err) {
+        console.error("Animation failed", err);
+    }
+}
+
+setInterval(updateSimulation, 5000);
+updateSimulation();
+
 </script>
 
 </body>
