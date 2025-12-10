@@ -56,7 +56,6 @@ h2 {
     background: #1d4ed8;
 }
 
-
 main {
     display: flex;
     flex-direction: column;
@@ -69,16 +68,14 @@ main {
     margin-bottom: 20px;
 }
 
-.layout-fullwidth .diagram-box {
+.diagram-box {
     width: 100%;
-    min-height: 350px;
     padding: 16px;
     background: white;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 3px rgba(15,23,42,0.08);
 }
-
 
 .layout {
     display: flex;
@@ -97,19 +94,8 @@ main {
     border: 1px solid #e5e7eb;
     padding: 12px 14px;
     margin-bottom: 14px;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 3px rgba(15,23,42,0.08);
 }
-
-.panel:last-child {
-    margin-bottom: 0;
-}
-
-.panel-note {
-    font-size: 12px;
-    color: #6b7280;
-    margin-top: 6px;
-}
-
 
 table {
     width: 100%;
@@ -118,8 +104,7 @@ table {
     font-size: 14px;
 }
 
-th,
-td {
+th, td {
     padding: 6px 8px;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
@@ -137,10 +122,6 @@ tr:nth-child(even) td {
     background: #f9fafb;
 }
 
-.small-table {
-    font-size: 12px;
-}
-
 .table-scroll {
     max-height: 320px;
     overflow-y: auto;
@@ -152,35 +133,19 @@ tr:nth-child(even) td {
     max-height: 220px;
 }
 
-
-.bottom-layout {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.wide-panel {
-    flex: 1 1 480px;
-}
-
-
 #sim-container {
     margin-top: 12px;
-    padding: 16px 24px;
+    padding: 12px 20px;
     background: #ffffff;
     border-radius: 8px;
 }
 
 .row {
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
-    margin: 6px 0;
-    min-height: 50px;
-}
-
-.row.center {
-    justify-content: center;
+    margin: 3px 0;
+    min-height: 38px;
 }
 
 .row.space {
@@ -190,20 +155,24 @@ tr:nth-child(even) td {
 
 .arrow-row {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin: -5px 0 5px 0;
-    min-height: 20px;
+    justify-content: space-between;
+    margin: -10px 0 5px 0;
+    padding: 0 55px; 
 }
 
 .node {
     background: #e0ecff;
-    padding: 8px 14px;
+    padding: 6px 12px;
     border-radius: 999px;
     border: 2px solid #bfdbfe;
+    font-size: 12px;
     font-weight: bold;
-    font-size: 13px;
     transition: 0.25s;
+}
+
+.node.small {
+    padding: 5px 9px;
+    font-size: 11px;
 }
 
 .node.inbound {
@@ -211,48 +180,48 @@ tr:nth-child(even) td {
     border-color: #c7d2fe;
 }
 
-.node.small {
-    padding: 6px 10px;
-    font-size: 12px;
-}
-
 .node.active {
     background: #2563eb;
     color: white;
     border-color: #1d4ed8;
-    box-shadow: 0 0 12px rgba(37, 99, 235, 0.7);
+    box-shadow: 0 0 12px rgba(37, 99, 235, .7);
 }
 
 .arrow {
-    font-size: 18px;
-    margin: 0 8px;
+    font-size: 16px;
     color: #6b7280;
 }
 
 .arrow.h {
-    font-size: 20px;
+    margin: 0 6px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .arrow.v {
-    font-size: 24px;
-    text-align: center;
+    font-size: 20px;
     width: 100%;
+    text-align: center;
+    margin: 3px 0;
 }
 
 
+.palcol-1 { background:#ffebee !important; border-color:#ffcdd2 !important; }
+.palcol-2 { background:#e8eaf6 !important; border-color:#c5cae9 !important; }
+.palcol-3 { background:#e3f2fd !important; border-color:#bbdefb !important; }
+.palcol-4 { background:#e0f7fa !important; border-color:#b2ebf2 !important; }
+.palcol-5 { background:#e8f5e9 !important; border-color:#c8e6c9 !important; }
+.palcol-6 { background:#fffde7 !important; border-color:#fff9c4 !important; }
+.palcol-7 { background:#fff3e0 !important; border-color:#ffe0b2 !important; }
+.palcol-8 { background:#fbe9e7 !important; border-color:#ffccbc !important; }
+.palcol-9 { background:#f3e5f5 !important; border-color:#e1bee7 !important; }
+.palcol-10 { background:#ede7f6 !important; border-color:#d1c4e9 !important; }
+.palcol-11 { background:#e1f5fe !important; border-color:#b3e5fc !important; }
+.palcol-12 { background:#f9fbe7 !important; border-color:#f0f4c3 !important; }
+
+
 @media (max-width: 900px) {
-    body {
-        padding: 12px;
-    }
-
-    .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .bottom-layout {
-        flex-direction: column;
-    }
+    body { padding: 12px; }
+    .top-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .bottom-layout { flex-direction: column; }
 }
