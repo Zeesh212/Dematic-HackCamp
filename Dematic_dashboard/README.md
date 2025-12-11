@@ -31,6 +31,16 @@ Run the app - python app.py
 
 Open the system in your browser - http://127.0.0.1:5000
 
+OR
+
+you can run it by going on to command prompt app
+
+C:
+cd "where the file is located"
+py app.py
+click on the link: http://127.0.0.1:5000
+and once clicked you are then able to see they system within the browser
+
 4. How it works
 
 Backend (Python/Flask):
