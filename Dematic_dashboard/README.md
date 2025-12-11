@@ -36,7 +36,7 @@ Open the system in your browser - http://127.0.0.1:5000
 Backend (Python/Flask):
 Reads each line of the log and updates pallet locations, status, and history.
 
-Frontend (HTML/CSS/JS):
+Frontend (HTML/CSS):
 Shows the warehouse diagram and highlights the pallet path.
 Also displays the event table, faults, pallet summary and history.
 
