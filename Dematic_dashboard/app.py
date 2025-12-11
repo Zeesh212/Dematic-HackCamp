@@ -8,7 +8,6 @@ LOG_PATH = "final_logs.txt.txt"
 
 
 def extract_pallet_id(line):
-    """Return the first 8-digit pallet ID found in a log line, or empty string."""
     match = re.search(r"\b(\d{8})\b", line)
     return match.group(1) if match else ""
 
@@ -56,7 +55,6 @@ def parse_all_events():
 
 
 def get_pallet_history(pallet_id):
-    """Return ordered list of events for a pallet."""
     if not pallet_id or not os.path.exists(LOG_PATH):
         return []
 
@@ -86,7 +84,6 @@ def get_pallet_history(pallet_id):
 
 
 def build_pallet_states(events):
-    """Calculate each pallet's current state."""
     pallet_states = {}
     first_seen = {}
 
@@ -144,7 +141,6 @@ def build_pallet_states(events):
 
 @app.route("/pallet_path/<pallet_id>")
 def pallet_path(pallet_id):
-    """Return ordered visited nodes for animation."""
     history = get_pallet_history(pallet_id)
     if not history:
         return jsonify({"error": "Not found"}), 404
@@ -163,7 +159,6 @@ def pallet_path(pallet_id):
 
 @app.route("/all_pallet_positions")
 def all_pallet_positions():
-    """Return latest location of EVERY pallet for live highlighting."""
     events, _ = parse_all_events()
 
     positions = {}
@@ -225,3 +220,4 @@ def index():
 if __name__ == "__main__":
     app.run(debug=True)
     
+
