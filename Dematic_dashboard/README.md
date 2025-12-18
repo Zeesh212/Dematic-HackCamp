@@ -50,7 +50,7 @@ and once clicked you are then able to see they system within the browser
 Backend (Python/Flask):
 Reads each line of the log and updates pallet locations, status, and history.
 
-Frontend (HTML/CSS):
+Frontend (HTML/CSS/JavaScript):
 Shows the warehouse diagram and highlights the pallet path.
 Also displays the event table, faults, pallet summary and history.
 
